@@ -15,4 +15,11 @@ public class DataTest {
         Assert.assertEquals(true, true);
     }
 
+    @Test
+    public void goodTest(){
+      DataLoader dataLoader = new DataLoader();
+      DataParser dataParser = new DataParser();
+      String json = dataLoader.loadJsonFile("countries-aggregated_json.json");
+      Assert.assertFalse(dataParser.parseJsonData(json).isEmpty());
+    }
 }
