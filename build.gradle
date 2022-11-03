@@ -1,0 +1,94 @@
+plugins{
+  id 'java'
+  id 'application'
+  id 'org.openjfx.javafxplugin' version '0.0.8'
+  id 'de.undercouch.download' version '4.1.1'
+}
+version = '0.1.0'
+sourceCompatibility = 11
+
+repositories{
+  jcenter()
+  mavenCentral()
+}
+
+dependencies{
+  testImplementation group: 'junit', name: 'junit', version: '4.13.1'
+  implementation group: 'com.google.code.gson', name: 'gson', version: '2.10'
+}
+
+javafx {
+  version = '11.0.2'
+  modules = ['javafx.controls']
+}
+
+mainClassName = 'Main'
+
+task buildCore(dependsOn: "copy"){
+  doLast{
+  sourceSets {
+    main {
+      java {
+        srcDir 'src/main/java'
+        exclude '**/ui/*.java'
+      }
+    }
+  }
+  }
+  finalizedBy(build)
+}
+
+task buildUI(dependsOn: "copy"){
+  doLast{
+  sourceSets {
+    main {
+      java {
+        srcDir 'src/main/java'
+        include '**/core/*.java'
+        include '**/ui/*.java'
+      }
+    }
+  }
+  }
+  finalizedBy(build)
+}
+
+task runCore{
+  dependsOn(buildCore)
+  doLast{
+  application {
+    mainClass = 'de.unitrier.st.core.Main'
+  }
+  }
+  finalizedBy(run)
+}
+
+task runUI{
+  dependsOn(buildUI)
+  doLast{
+  application {
+    mainClass = 'de.unitrier.st.ui.Ui'
+  }
+  }
+  finalizedBy(run)
+}
+
+task downloadGoodZip(type: Download){
+    src 'https://datahub.io/core/covid-19/r/covid-19_zip.zip'
+    dest buildDir
+    onlyIfModified true
+}
+task unzip(type: Copy, dependsOn: downloadGoodZip)
+{
+    def oldLocation = file("$buildDir/covid-19_zip.zip")
+    def newLocation = file("$buildDir/covid-19")
+    from zipTree(oldLocation)
+    into newLocation
+}
+
+task copy(type: Copy, dependsOn: unzip){
+  def oldLocation = file("$buildDir/covid-19/data/countries-aggregated_json.json")
+  def newLocation = file("src/main/resources")
+  from oldLocation
+  into newLocation
+}
