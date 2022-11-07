@@ -35,7 +35,7 @@ task buildCore(dependsOn: "copy"){
     }
   }
   }
-  finalizedBy(build)
+  finalizedBy(assemble)
 }
 
 task buildUI(dependsOn: "copy"){
@@ -50,7 +50,7 @@ task buildUI(dependsOn: "copy"){
     }
   }
   }
-  finalizedBy(build)
+  finalizedBy(assemble)
 }
 
 task runCore{
