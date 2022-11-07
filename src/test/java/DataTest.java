@@ -20,6 +20,6 @@ public class DataTest {
       DataLoader dataLoader = new DataLoader();
       DataParser dataParser = new DataParser();
       String json = dataLoader.loadJsonFile("countries-aggregated_json.json");
-      Assert.assertTrue(dataParser.parseJsonData(json).isEmpty());
+      Assert.assertFalse(dataParser.parseJsonData(json).isEmpty());
     }
 }
