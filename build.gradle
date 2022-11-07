@@ -95,6 +95,7 @@ task unzip(type: Copy, dependsOn: downloadGoodZip)
     into newLocation
 }
 
+
 task copy(type: Copy, dependsOn: unzip){
   def oldLocation = file("$buildDir/covid-19/data/countries-aggregated_json.json")
   def newLocation = file("src/main/resources")
